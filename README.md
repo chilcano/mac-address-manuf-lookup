@@ -14,6 +14,7 @@ In this first version I have used Python and the next frameworks:
 - `Flask` (http://flask.pocoo.org) is a microframework for Python based on Werkzeug and Jinja 2. I will use `Flask` to implement a mini-web application.
 - `SQLAlchemy` (http://www.sqlalchemy.org/) is a Python SQL toolkit and ORM.
 - `SQLite3` (https://www.sqlite.org) is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine. 
+- `pyOpenssl` library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS). To install it just run `pip install pyOpenssl`.
 
 ## Getting started
 
@@ -39,6 +40,9 @@ DB Manuf file created: manuf/20160220.073718.660_f8866ea289904350b5ff60ffda53edc
 
 __2) Running the Python Microservice__
 
+
+_2.1. over HTTP_
+
 ```bash
 $ python mac_manuf_api_rest.py
  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
@@ -55,7 +59,6 @@ $ python mac_manuf_api_rest.py
 And from other Terminal to call the API Rest.
 
 ```bash
-
 $ curl -i http://127.0.0.1:5000/chilcano/api/manuf/00-50:Ca-ca-fe-ca-fe
 HTTP/1.0 400 BAD REQUEST
 Content-Type: application/json
@@ -80,7 +83,36 @@ Date: Sat, 20 Feb 2016 07:38:15 GMT
   "manuf": "NetToNet",
   "manuf_desc": "# NET TO NET TECHNOLOGIES"
 }
+```
 
+_2.2. Over HTTPS_
+
+`pyOpenssl` moodule was required to start the embedded Webserver on HTTPS (TLS). 
+To install it just run `pip install pyOpenssl`.
+
+Then, the Python App is running over HTTPS:
+```bash
+$ python mac_manuf_api_rest.py
+ * Running on https://0.0.0.0:5443/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger pin code: 258-876-642
+```
+
+And calling the API:
+```bash
+$ curl -ik https://127.0.0.1:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 93
+Server: Werkzeug/0.11.4 Python/2.7.11
+Date: Mon, 29 Feb 2016 15:58:21 GMT
+
+{
+  "mac": "00:50:CA",
+  "manuf": "NetToNet",
+  "manuf_desc": "# NET TO NET TECHNOLOGIES"
+}
 ```
 
 __3) Running everything into a Docker container__
@@ -119,7 +151,7 @@ __4) Testing__
 
 Getting the Docker Machine IP Address.
 ```bash
- docker-machine ls
+$ docker-machine ls
 NAME           ACTIVE   DRIVER       STATE     URL                         SWARM   ERRORS
 default        *        virtualbox   Running   tcp://192.168.99.100:2376
 machine-dev    -        virtualbox   Stopped
@@ -134,6 +166,22 @@ Content-Type: application/json
 Content-Length: 93
 Server: Werkzeug/0.11.4 Python/2.7.11
 Date: Sat, 20 Feb 2016 09:01:38 GMT
+
+{
+  "mac": "00:50:CA",
+  "manuf": "NetToNet",
+  "manuf_desc": "# NET TO NET TECHNOLOGIES"
+}
+```
+
+If the emebedded server was started on HTTPS, you could test it as shown below.
+```bash
+$ curl -ik https://192.168.99.100:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 93
+Server: Werkzeug/0.11.4 Python/2.7.11
+Date: Mon, 29 Feb 2016 15:58:21 GMT
 
 {
   "mac": "00:50:CA",
