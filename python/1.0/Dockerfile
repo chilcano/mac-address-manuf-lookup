@@ -5,7 +5,7 @@
 # $ docker build --rm -t chilcano/mac-manuf:py-1.0 python/1.0/.
 # $ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp -p 5443:5443/tcp chilcano/mac-manuf:py-1.0
 # $ docker exec -ti mac-manuf-py-1.0 bash
-# 
+# $ curl -ik https://192.168.99.100:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 
 # Official Dockerfile used: https://hub.docker.com/_/python
 FROM python:2.7
@@ -17,7 +17,7 @@ RUN pip install Flask
 RUN pip install sqlalchemy
 RUN pip install pyOpenSSL
 
-# Allocate the 5000 to run a HTTP server
+# Allocate the 5000/5443 to run a HTTP/HTTPS server
 EXPOSE 5000 5443
 
 COPY mac_manuf_wireshark_file.py /
