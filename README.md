@@ -14,7 +14,7 @@ In this first version I have used Python and the next frameworks:
 - `Flask` (http://flask.pocoo.org) is a microframework for Python based on Werkzeug and Jinja 2. I will use `Flask` to implement a mini-web application.
 - `SQLAlchemy` (http://www.sqlalchemy.org/) is a Python SQL toolkit and ORM.
 - `SQLite3` (https://www.sqlite.org) is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine. 
-- `pyOpenssl` library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS). To install it just run `pip install pyOpenssl`.
+- `pyOpenSSL` library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS).
 
 ## Getting started
 
@@ -87,8 +87,8 @@ Date: Sat, 20 Feb 2016 07:38:15 GMT
 
 _2.2. Over HTTPS_
 
-`pyOpenssl` moodule was required to start the embedded Webserver on HTTPS (TLS). 
-To install it just run `pip install pyOpenssl`.
+`pyOpenSSL` moodule was required to start the embedded Webserver on HTTPS (TLS). 
+To install it just run `pip install pyOpenSSL`.
 
 Then, the Python App is running over HTTPS:
 ```bash
