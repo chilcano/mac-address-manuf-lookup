@@ -21,8 +21,8 @@ app = Flask(__name__)
 
 # 
 # API Rest:
-#   i.e. http://localhost:5000/chilcano/api/manuf/00:50:5a:e5:6e:cf
-#   i.e. https://localhost:5443/chilcano/api/manuf/00:50:5a:e5:6e:cf
+#   i.e. curl -i http://localhost:5000/chilcano/api/manuf/00:50:5a:e5:6e:cf
+#   i.e. curl -ik https://localhost:5443/chilcano/api/manuf/00:50:5a:e5:6e:cf
 #
 @app.route("/chilcano/api/manuf/<string:macAddress>", methods=["GET"])
 def get_manuf(macAddress):
@@ -49,4 +49,4 @@ if __name__ == "__main__":
         # 'adhoc' means auto-generate the certificate and keypair
         app.run(host="0.0.0.0", port=5443, ssl_context="adhoc", threaded=True, debug=True)
     else:
-        app.run(host="0.0.0.0", port=5000, debug=True)
+        app.run(host="0.0.0.0", port=5000, threaded=True, debug=True)
