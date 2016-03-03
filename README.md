@@ -15,6 +15,7 @@ In this first version I have used Python and the next frameworks:
 - `SQLAlchemy` (http://www.sqlalchemy.org/) is a Python SQL toolkit and ORM.
 - `SQLite3` (https://www.sqlite.org) is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine. 
 - `pyOpenSSL` library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS).
+- `CORS extension for Flask` (https://flask-cors.readthedocs.org) useful to solve cross-domain Ajax request issues.
 
 ## Getting started
 
