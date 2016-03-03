@@ -12,7 +12,6 @@ from mac_manuf_table_def import MacAddressManuf
 
 ROOT_DIR = "manuf"
 FINAL_MANUF_DB_FILENAME = "mac_address_manuf.db"
-HTTPS_ENABLED = "true"
 
 engine = create_engine("sqlite:///" + os.path.join(ROOT_DIR, FINAL_MANUF_DB_FILENAME))
 Session = sessionmaker(bind=engine)
@@ -21,9 +20,8 @@ app = Flask(__name__)
 
 # 
 # API Rest:
-#   i.e. curl -i http://localhost:5000/chilcano/api/manuf/00:50:5a:e5:6e:cf
-#   i.e. curl -ik https://localhost:5443/chilcano/api/manuf/00:50:5a:e5:6e:cf
-#
+# # i.e. http://localhost:5000/chilcano/api/manuf/00:50:5a:e5:6e:cf
+# 
 @app.route("/chilcano/api/manuf/<string:macAddress>", methods=["GET"])
 def get_manuf(macAddress):
     try:
@@ -45,8 +43,4 @@ def get_manuf(macAddress):
         return jsonify(error="The MAC Address '" + macAddress + "' is malformed"), 400
 
 if __name__ == "__main__":
-    if HTTPS_ENABLED == "true":
-        # 'adhoc' means auto-generate the certificate and keypair
-        app.run(host="0.0.0.0", port=5443, ssl_context="adhoc", threaded=True, debug=True)
-    else:
-        app.run(host="0.0.0.0", port=5000, threaded=True, debug=True)
+     app.run(debug=True,host="0.0.0.0")
