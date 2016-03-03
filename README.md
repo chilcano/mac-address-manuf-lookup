@@ -119,33 +119,34 @@ Date: Mon, 29 Feb 2016 15:58:21 GMT
 __3) Running everything into a Docker container__
 
 
-Clon the Github repository.
+Clone the Github repository.
 ```bash
 $ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
 
 $ cd docker-mac-address-manuf-lookup
 ```
 
-Build the container.
+Build, run and check the container.
 ```bash
 $ docker build --rm -t chilcano/mac-manuf:py-1.0 python/1.0/.
-```
+$ docker build --rm -t chilcano/mac-manuf:py-1.1 python/1.1/.
+$ docker build --rm -t chilcano/mac-manuf:py-latest python/latest/.
 
-Run the container.
-```bash
 $ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp chilcano/mac-manuf:py-1.0
-```
+$ docker run -dt --name=mac-manuf-py-1.1 -p 5443:5443/tcp chilcano/mac-manuf:py-1.1
+$ docker run -dt --name=mac-manuf-py-latest -p 5443:5443/tcp chilcano/mac-manuf:py-latest
 
-Check if the Docker container is running.
-```bash
 $ docker ps
-CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                    NAMES
-d09d7ff25788        chilcano/mac-manuf:py-1.0   "/bin/sh -c 'python m"   14 seconds ago      Up 13 seconds       0.0.0.0:5000->5000/tcp   mac-manuf-py-1.0
+CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES
+d09d7ff25788        chilcano/mac-manuf:py-1.0      "/bin/sh -c 'python m"   14 seconds ago      Up 13 seconds       0.0.0.0:5000->5000/tcp   mac-manuf-py-1.0
+edd1f59853ac        chilcano/mac-manuf:py-latest   "/bin/sh -c 'python m"   42 minutes ago      Up 42 minutes       0.0.0.0:5443->5443/tcp   mac-manuf-py-latest
 ```
 
 Gettting SSH access to the Container to check if SQLite DB exists.
 ```bash
 $ docker exec -ti mac-manuf-py-1.0 bash
+$ docker exec -ti mac-manuf-py-1.1 bash
+$ docker exec -ti mac-manuf-py-latest bash
 ```
 
 __4) Testing__
