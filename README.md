@@ -176,7 +176,7 @@ Date: Sat, 20 Feb 2016 09:01:38 GMT
 }
 ```
 
-If the emebedded server was started on HTTPS, you could test it as shown below.
+If the embedded server was started on HTTPS, you could test it as shown below.
 ```bash
 $ curl -ik https://192.168.99.100:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 HTTP/1.0 200 OK
