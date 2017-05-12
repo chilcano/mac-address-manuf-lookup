@@ -17,17 +17,22 @@ In this first version I have used Python and the next frameworks:
 - `pyOpenSSL` library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS).
 - `CORS extension for Flask` (https://flask-cors.readthedocs.org) useful to solve cross-domain Ajax request issues.
 
+
 ## Getting started
+
 
 __1) Download the Wireshark Manufacturer file__
 
+
 Download this Github repository.
+
 ```bash
 $ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
 $ cd docker-mac-address-manuf-lookup/python/1.0
 ```
 
 Now, to download the Wireshark Manufacturer file.
+
 ```bash
 $ python mac_manuf_wireshark_file.py
 
@@ -39,10 +44,12 @@ DB Manuf file created: manuf/20160220.073718.660_f8866ea289904350b5ff60ffda53edc
 
 ```
 
+
 __2) Running the Python Microservice__
 
 
 _2.1. over HTTP_
+
 
 ```bash
 $ python mac_manuf_api_rest.py
@@ -86,12 +93,15 @@ Date: Sat, 20 Feb 2016 07:38:15 GMT
 }
 ```
 
+
 _2.2. Over HTTPS_
+
 
 `pyOpenSSL` moodule was required to start the embedded Webserver on HTTPS (TLS). 
 To install it just run `pip install pyOpenSSL`.
 
 Then, the Python App is running over HTTPS:
+
 ```bash
 $ python mac_manuf_api_rest.py
  * Running on https://0.0.0.0:5443/ (Press CTRL+C to quit)
@@ -101,6 +111,7 @@ $ python mac_manuf_api_rest.py
 ```
 
 And calling the API:
+
 ```bash
 $ curl -ik https://127.0.0.1:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 HTTP/1.0 200 OK
@@ -116,17 +127,26 @@ Date: Mon, 29 Feb 2016 15:58:21 GMT
 }
 ```
 
+
 __3) Running everything into a Docker container__
 
+_3.1. Clonning the Github repository_
 
-Clone the Github repository.
 ```bash
 $ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
 
 $ cd docker-mac-address-manuf-lookup
 ```
 
-Build, run and check the container.
+_3.2. Pull from Docker Hub_
+
+```bash
+$ docker pull chilcano/mac-manuf-lookup-py
+```
+
+
+_3.3. Build, run and check the container_
+
 ```bash
 $ docker build --rm -t chilcano/mac-manuf:py-1.0 python/1.0/.
 $ docker build --rm -t chilcano/mac-manuf:py-1.1 python/1.1/.
@@ -142,16 +162,20 @@ d09d7ff25788        chilcano/mac-manuf:py-1.0      "/bin/sh -c 'python m"   14 s
 edd1f59853ac        chilcano/mac-manuf:py-latest   "/bin/sh -c 'python m"   42 minutes ago      Up 42 minutes       0.0.0.0:5443->5443/tcp   mac-manuf-py-latest
 ```
 
-Gettting SSH access to the Container to check if SQLite DB exists.
+_3.4. Gettting SSH access to the Container to check if SQLite DB exists_
+
 ```bash
 $ docker exec -ti mac-manuf-py-1.0 bash
 $ docker exec -ti mac-manuf-py-1.1 bash
 $ docker exec -ti mac-manuf-py-latest bash
 ```
 
+
 __4) Testing__
 
+
 Getting the Docker Machine IP Address.
+
 ```bash
 $ docker-machine ls
 NAME           ACTIVE   DRIVER       STATE     URL                         SWARM   ERRORS
@@ -161,6 +185,7 @@ machine-test   -        virtualbox   Stopped
 ```
 
 Calling the Microservice (API Rest).
+
 ```bash
 $ curl -i http://192.168.99.100:5000/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 HTTP/1.0 200 OK
@@ -177,6 +202,7 @@ Date: Sat, 20 Feb 2016 09:01:38 GMT
 ```
 
 If the embedded server was started on HTTPS, you could test it as shown below.
+
 ```bash
 $ curl -ik https://192.168.99.100:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 HTTP/1.0 200 OK
