@@ -1,8 +1,10 @@
 # Docker MAC Address Manufacturer Lookup
 
+
 This Docker container provides a Microservice (API Rest) to MAC Address Manufacturer resolution.
 
 This Docker container is part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie ([Part I](http://ow.ly/YcEf1), [Part II](http://ow.ly/YcEgz) & [Part III](http://ow.ly/YcEij)), but you can use it independently as part of other set of Docker containers.
+
 
 This Docker Container will work in this scenario, as shown below:
 
@@ -10,6 +12,7 @@ This Docker Container will work in this scenario, as shown below:
 
 
 In this first version I have used Python and the next frameworks:
+
 
 - `Flask` (http://flask.pocoo.org) is a microframework for Python based on Werkzeug and Jinja 2. I will use `Flask` to implement a mini-web application.
 - `SQLAlchemy` (http://www.sqlalchemy.org/) is a Python SQL toolkit and ORM.
@@ -130,12 +133,16 @@ Date: Mon, 29 Feb 2016 15:58:21 GMT
 
 __3) Running everything into a Docker container__
 
-_3.1. Clonning the Github repository_
+_3.1. Clonning the Github repository and Building the container_
 
 ```bash
 $ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
 
 $ cd docker-mac-address-manuf-lookup
+
+$ docker build --rm -t chilcano/mac-manuf-py:1.0 python/1.0/.
+$ docker build --rm -t chilcano/mac-manuf-py:1.1 python/1.1/.
+$ docker build --rm -t chilcano/mac-manuf-py:latest python/latest/.
 ```
 
 _3.2. Pull from Docker Hub_
@@ -145,21 +152,17 @@ $ docker pull chilcano/mac-manuf-lookup-py
 ```
 
 
-_3.3. Build, run and check the container_
+_3.3. Run and check the container_
 
 ```bash
-$ docker build --rm -t chilcano/mac-manuf:py-1.0 python/1.0/.
-$ docker build --rm -t chilcano/mac-manuf:py-1.1 python/1.1/.
-$ docker build --rm -t chilcano/mac-manuf:py-latest python/latest/.
-
-$ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp chilcano/mac-manuf:py-1.0
-$ docker run -dt --name=mac-manuf-py-1.1 -p 5443:5443/tcp chilcano/mac-manuf:py-1.1
-$ docker run -dt --name=mac-manuf-py-latest -p 5443:5443/tcp chilcano/mac-manuf:py-latest
+$ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp chilcano/mac-manuf-py:1.0
+$ docker run -dt --name=mac-manuf-py-1.1 -p 5443:5443/tcp chilcano/mac-manuf-py:1.1
+$ docker run -dt --name=mac-manuf-py-latest -p 5443:5443/tcp chilcano/mac-manuf-py:latest
 
 $ docker ps
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES
-d09d7ff25788        chilcano/mac-manuf:py-1.0      "/bin/sh -c 'python m"   14 seconds ago      Up 13 seconds       0.0.0.0:5000->5000/tcp   mac-manuf-py-1.0
-edd1f59853ac        chilcano/mac-manuf:py-latest   "/bin/sh -c 'python m"   42 minutes ago      Up 42 minutes       0.0.0.0:5443->5443/tcp   mac-manuf-py-latest
+d09d7ff25788        chilcano/mac-manuf-py-1.0      "/bin/sh -c 'python m"   14 seconds ago      Up 13 seconds       0.0.0.0:5000->5000/tcp   mac-manuf-py-1.0
+edd1f59853ac        chilcano/mac-manuf-py-latest   "/bin/sh -c 'python m"   42 minutes ago      Up 42 minutes       0.0.0.0:5443->5443/tcp   mac-manuf-py-latest
 ```
 
 _3.4. Gettting SSH access to the Container to check if SQLite DB exists_
