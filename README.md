@@ -140,9 +140,9 @@ $ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
 
 $ cd docker-mac-address-manuf-lookup
 
-$ docker build --rm -t chilcano/mac-manuf-py:1.0 python/1.0/.
-$ docker build --rm -t chilcano/mac-manuf-py:1.1 python/1.1/.
-$ docker build --rm -t chilcano/mac-manuf-py:latest python/latest/.
+$ docker build --rm -t chilcano/mac-manuf-lookup-py:1.0 python/1.0/.
+$ docker build --rm -t chilcano/mac-manuf-lookup-py:1.1 python/1.1/.
+$ docker build --rm -t chilcano/mac-manuf-lookup-py:latest python/latest/.
 ```
 
 _3.2. Pull from Docker Hub_
@@ -155,9 +155,9 @@ $ docker pull chilcano/mac-manuf-lookup-py
 _3.3. Run and check the container_
 
 ```bash
-$ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp chilcano/mac-manuf-py:1.0
-$ docker run -dt --name=mac-manuf-py-1.1 -p 5443:5443/tcp chilcano/mac-manuf-py:1.1
-$ docker run -dt --name=mac-manuf-py-latest -p 5443:5443/tcp chilcano/mac-manuf-py:latest
+$ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp chilcano/mac-manuf-lookup-py:1.0
+$ docker run -dt --name=mac-manuf-py-1.1 -p 5443:5443/tcp chilcano/mac-manuf-lookup-py:1.1
+$ docker run -dt --name=mac-manuf-py-latest -p 5443:5443/tcp chilcano/mac-manuf-lookup-py:latest
 
 $ docker ps
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES
