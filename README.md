@@ -2,7 +2,7 @@
 
 This Docker container provides a Microservice (API Rest) to MAC Address Manufacturer resolution.
 
-This Docker container is part of the "Everything generates Data: Capturing WIFI Anonumous Traffic using Raspberry Pi and WSO2 BAM" blog serie ([Part I](http://ow.ly/YcEf1), [Part II](http://ow.ly/YcEgz) & [Part III](http://ow.ly/YcEij)), but you can use it independently as part of other set of Docker containers.
+This Docker container is part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie ([Part I](http://ow.ly/YcEf1), [Part II](http://ow.ly/YcEgz) & [Part III](http://ow.ly/YcEij)), but you can use it independently as part of other set of Docker containers.
 
 This Docker Container will work in this scenario, as shown below:
 
