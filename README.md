@@ -155,21 +155,16 @@ $ docker pull chilcano/mac-manuf-lookup-py
 _3.3. Run and check the container_
 
 ```bash
-$ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp chilcano/mac-manuf-lookup-py:1.0
-$ docker run -dt --name=mac-manuf-py-1.1 -p 5443:5443/tcp chilcano/mac-manuf-lookup-py:1.1
-$ docker run -dt --name=mac-manuf-py-latest -p 5443:5443/tcp chilcano/mac-manuf-lookup-py:latest
+$ docker run -dt --name=mac-manuf-py-latest -p 5000:5000/tcp -p 5443:5443/tcp chilcano/mac-manuf-lookup-py:latest
 
-$ docker ps
-CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES
-d09d7ff25788        chilcano/mac-manuf-py-1.0      "/bin/sh -c 'python m"   14 seconds ago      Up 13 seconds       0.0.0.0:5000->5000/tcp   mac-manuf-py-1.0
-edd1f59853ac        chilcano/mac-manuf-py-latest   "/bin/sh -c 'python m"   42 minutes ago      Up 42 minutes       0.0.0.0:5443->5443/tcp   mac-manuf-py-latest
+$ docker ps -a
+CONTAINER ID        IMAGE                                 COMMAND                  CREATED             STATUS              PORTS                                            NAMES
+0d5c2df25520        chilcano/mac-manuf-lookup-py:latest   "/bin/sh -c 'pytho..."   8 seconds ago       Up 6 seconds        0.0.0.0:5000->5000/tcp, 0.0.0.0:5443->5443/tcp   mac-manuf-py-latest
 ```
 
 _3.4. Gettting SSH access to the Container to check if SQLite DB exists_
 
 ```bash
-$ docker exec -ti mac-manuf-py-1.0 bash
-$ docker exec -ti mac-manuf-py-1.1 bash
 $ docker exec -ti mac-manuf-py-latest bash
 ```
 
@@ -177,20 +172,10 @@ $ docker exec -ti mac-manuf-py-latest bash
 __4) Testing__
 
 
-Getting the Docker Machine IP Address.
-
-```bash
-$ docker-machine ls
-NAME           ACTIVE   DRIVER       STATE     URL                         SWARM   ERRORS
-default        *        virtualbox   Running   tcp://192.168.99.100:2376
-machine-dev    -        virtualbox   Stopped
-machine-test   -        virtualbox   Stopped
-```
-
 Calling the Microservice (API Rest).
 
 ```bash
-$ curl -i http://192.168.99.100:5000/chilcano/api/manuf/00-50:Ca-ca-fe-ca
+$ curl -i http://localhost:5000/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 HTTP/1.0 200 OK
 Content-Type: application/json
 Content-Length: 93
@@ -207,7 +192,7 @@ Date: Sat, 20 Feb 2016 09:01:38 GMT
 If the embedded server was started on HTTPS, you could test it as shown below.
 
 ```bash
-$ curl -ik https://192.168.99.100:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
+$ curl -ik https://localhost:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 HTTP/1.0 200 OK
 Content-Type: application/json
 Content-Length: 93
