@@ -2,8 +2,8 @@
 #
 # $ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
 # $ cd docker-mac-address-manuf-lookup
-# $ docker build --rm -t chilcano/mac-manuf:py-1.0 python/1.0/.
-# $ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp chilcano/mac-manuf:py-1.0
+# $ docker build --rm -t chilcano/mac-manuf-py:1.0 python/1.0/.
+# $ docker run -dt --name=mac-manuf-py-1.0 -p 5000:5000/tcp chilcano/mac-manuf-py-1.0
 # $ docker exec -ti mac-manuf-py-1.0 bash
 # 
 
