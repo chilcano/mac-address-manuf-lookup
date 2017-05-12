@@ -2,8 +2,8 @@
 #
 # $ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
 # $ cd docker-mac-address-manuf-lookup
-# $ docker build --rm -t chilcano/mac-manuf:py-latest python/latest/.
-# $ docker run -dt --name=mac-manuf-py-latest -p 5000:5000/tcp -p 5443:5443/tcp chilcano/mac-manuf:py-latest
+# $ docker build --rm -t chilcano/mac-manuf-py:latest python/latest/.
+# $ docker run -dt --name=mac-manuf-py-latest -p 5000:5000/tcp -p 5443:5443/tcp chilcano/mac-manuf-py:latest
 # $ docker exec -ti mac-manuf-py-latest bash
 # $ curl -ik https://127.0.0.1:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 # $ curl -ik https://192.168.99.100:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
