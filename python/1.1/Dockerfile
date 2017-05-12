@@ -1,11 +1,4 @@
 # Dockerfile to MAC Address Manufacturer Lookup container.
-#
-# $ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
-# $ cd docker-mac-address-manuf-lookup
-# $ docker build --rm -t chilcano/mac-manuf-py:1.1 python/1.1/.
-# $ docker run -dt --name=mac-manuf-py-1.1 -p 5000:5000/tcp -p 5443:5443/tcp chilcano/mac-manuf-py:1.1
-# $ docker exec -ti mac-manuf-py-1.1 bash
-# $ curl -ik https://192.168.99.100:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 
 # Official Dockerfile used: https://hub.docker.com/_/python
 FROM python:2.7
