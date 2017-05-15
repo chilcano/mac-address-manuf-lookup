@@ -16,7 +16,7 @@ In this first version I have used Python and the next frameworks:
 
 - `Flask` (http://flask.pocoo.org) is a microframework for Python based on Werkzeug and Jinja 2. I will use `Flask` to implement a mini-web application.
 - `SQLAlchemy` (http://www.sqlalchemy.org/) is a Python SQL toolkit and ORM.
-- `SQLite3` (https://www.sqlite.org) is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine. 
+- `SQLite3` (https://www.sqlite.org) is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
 - `pyOpenSSL` library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS).
 - `CORS extension for Flask` (https://flask-cors.readthedocs.org) useful to solve cross-domain Ajax request issues.
 
@@ -100,7 +100,7 @@ Date: Sat, 20 Feb 2016 07:38:15 GMT
 _2.2. Over HTTPS_
 
 
-`pyOpenSSL` moodule was required to start the embedded Webserver on HTTPS (TLS). 
+`pyOpenSSL` moodule was required to start the embedded Webserver on HTTPS (TLS).
 To install it just run `pip install pyOpenSSL`.
 
 Then, the Python App is running over HTTPS:
@@ -142,6 +142,7 @@ $ cd docker-mac-address-manuf-lookup
 
 $ docker build --rm -t chilcano/mac-manuf-lookup-py:1.0 python/1.0/.
 $ docker build --rm -t chilcano/mac-manuf-lookup-py:1.1 python/1.1/.
+$ docker build --rm -t chilcano/mac-manuf-lookup-py:1.2 python/1.2/.
 $ docker build --rm -t chilcano/mac-manuf-lookup-py:latest python/latest/.
 ```
 
@@ -155,6 +156,7 @@ $ docker pull chilcano/mac-manuf-lookup-py
 _3.3. Run and check the container_
 
 ```bash
+$ docker run -dt --name=mac-manuf-py-12 -p 5000:5000/tcp -p 5443:5443/tcp chilcano/mac-manuf-lookup-py:1.2
 $ docker run -dt --name=mac-manuf-py-latest -p 5000:5000/tcp -p 5443:5443/tcp chilcano/mac-manuf-lookup-py:latest
 
 $ docker ps -a
@@ -165,6 +167,7 @@ CONTAINER ID        IMAGE                                 COMMAND               
 _3.4. Gettting SSH access to the Container to check if SQLite DB exists_
 
 ```bash
+$ docker exec -ti mac-manuf-py-12 bash
 $ docker exec -ti mac-manuf-py-latest bash
 ```
 

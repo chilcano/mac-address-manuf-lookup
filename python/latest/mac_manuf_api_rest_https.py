@@ -23,7 +23,7 @@ cors = CORS(app, resources={r"/chilcano/api/*": {"origins": "*"}})
 
 #
 # API Rest:
-#   i.e. curl -i http://localhost:5000/chilcano/api/manuf/00:50:5a:e5:6e:cf
+#   i.e. curl -ik https://localhost:5443/chilcano/api/manuf/00:50:5a:e5:6e:cf
 #
 @app.route("/chilcano/api/manuf/<string:macAddress>", methods=["GET"])
 def get_manuf(macAddress):
@@ -46,4 +46,5 @@ def get_manuf(macAddress):
         return jsonify(error="The MAC Address '" + macAddress + "' is malformed"), 400
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, threaded=True, debug=True)
+    # 'adhoc' means auto-generate the certificate and keypair
+    app.run(host="0.0.0.0", port=5443, ssl_context="adhoc", threaded=True, debug=True)
