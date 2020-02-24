@@ -3,7 +3,12 @@
 
 This Microservice and its RESTful API implement a MAC Address Manufacturer resolution service.
 
-This Microservice and its RESTful API are part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie ([Part I](http://ow.ly/YcEf1), [Part II](http://ow.ly/YcEgz) & [Part III](http://ow.ly/YcEij)), but you can use it independently as part of other scenario.
+This Microservice and its RESTful API are part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie, but you can use it independently as part of other scenario.
+
+"Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie:
+- [Capturing WIFI/802.11 traffic using Raspberry Pi, Kismet, Python and Thrift](https://holisticsecurity.io/2016/02/02/everything-generates-data-capturing-wifi-anonymous-traffic-raspberrypi-wso2-part-i)
+- [Storing WIFI/802.11 traffic in a Database (NoSQL and RDBMS)](https://holisticsecurity.io/2016/02/04/everything-generates-data-capturing-wifi-anonymous-traffic-using-raspberry-pi-and-wso2-bam-part-ii)
+- [Creating a Dashboard in WSO2 BAM showing captured WIFI/802.11 traffic in real-time](https://holisticsecurity.io/2016/02/09/everything-generates-data-capturing-wifi-anonymous-traffic-raspberrypi-wso2-part-iii)
 
 
 MAC Address Manufacturer resolution service will work in this scenario as shown below:
