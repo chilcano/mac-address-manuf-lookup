@@ -1,7 +1,7 @@
 # Docker MAC Address Manufacturer Lookup
 
 
-This Microservice and its RESTful API implement a MAC Address Manufacturer resolution service. They are part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie, but you can use it independently as part of other scenario.
+This is a Microservice and its RESTful API that implements a MAC Address Manufacturer resolution service. They are part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie, but you can use it independently as part of other scenario.
 
 "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie:
 - [Capturing WIFI/802.11 traffic using Raspberry Pi, Kismet, Python and Thrift](https://holisticsecurity.io/2016/02/02/everything-generates-data-capturing-wifi-anonymous-traffic-raspberrypi-wso2-part-i)
@@ -28,7 +28,7 @@ In this version I've used Python and the next frameworks:
 
 ### Preparing the Microservice and its RESTful API
 
-__1) Download the Wireshark Manufacturer file__
+__1. Download the Wireshark Manufacturer file__
 
 
 Download this Github repository.
@@ -50,11 +50,10 @@ DB Manuf file created: manuf/20160220.073718.660_f8866ea289904350b5ff60ffda53edc
 ( 'mac_address_manuf.db' was created and 28441 rows were loaded into 'MacAddressManuf' table. )
 ```
 
-__2) Running the Python Microservice__
+__2. Running the Python Microservice__
 
 
-_2.1. over HTTP_
-
+_Running over HTTP_
 
 ```bash
 $ python mac_manuf_api_rest.py
@@ -98,9 +97,7 @@ Date: Sat, 20 Feb 2016 07:38:15 GMT
 }
 ```
 
-
-_2.2. Over HTTPS_
-
+_Running ver HTTPS_
 
 The `pyOpenSSL` moodule was required to start the embedded Webserver on HTTPS (TLS).
 To install it just run `pip install pyOpenSSL`.
@@ -152,7 +149,6 @@ __2. Pull from Docker Hub__
 ```bash
 $ docker pull chilcano/mac-manuf-lookup-py
 ```
-
 
 __3. Run and check the container__
 
