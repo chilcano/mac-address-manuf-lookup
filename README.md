@@ -1,9 +1,7 @@
 # Docker MAC Address Manufacturer Lookup
 
 
-This Microservice and its RESTful API implement a MAC Address Manufacturer resolution service.
-
-This Microservice and its RESTful API are part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie, but you can use it independently as part of other scenario.
+This Microservice and its RESTful API implement a MAC Address Manufacturer resolution service. They are part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie, but you can use it independently as part of other scenario.
 
 "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie:
 - [Capturing WIFI/802.11 traffic using Raspberry Pi, Kismet, Python and Thrift](https://holisticsecurity.io/2016/02/02/everything-generates-data-capturing-wifi-anonymous-traffic-raspberrypi-wso2-part-i)
@@ -71,7 +69,7 @@ $ python mac_manuf_api_rest.py
 
 ```
 
-And from other Terminal to call the API Rest.
+And from other Terminal to call the RESTful API.
 
 ```bash
 $ curl -i http://127.0.0.1:5000/chilcano/api/manuf/00-50:Ca-ca-fe-ca-fe
