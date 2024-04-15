@@ -22,3 +22,5 @@ target/
 *.zip
 *.iso
 _downloads/
+.venv
+__pycache__

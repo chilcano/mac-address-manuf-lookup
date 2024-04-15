@@ -5,10 +5,12 @@
 #
 
 import glob, hashlib, os, re, urllib, sqlite3
+import urllib.request
 import unicodecsv as unicodecsv
 from datetime import datetime
 
-WIRESHARK_MANUF_URL = "https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf"
+WIRESHARK_MANUF_URL = "https://www.wireshark.org/download/automated/data/manuf"
+#WIRESHARK_MANUF_URL = "https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf"
 #WIRESHARK_MANUF_URL = "http://anonsvn.wireshark.org/wireshark/trunk/manuf"
 ROOT_DIR = "manuf"
 #ROOT_DIR = "."
@@ -18,12 +20,13 @@ TABLE_NAME = "MacAddressManuf"
 FINAL_MANUF_DB_FILENAME = "mac_address_manuf.db"
 
 def download_file(rootdir, filename_prefix, url):
-    file_timestamp = datetime.utcnow().strftime('%Y%m%d.%H%M%S.%f')[:-3]
+    file_timestamp = datetime.now().strftime('%Y%m%d.%H%M%S.%f')[:-3]
     try:
         filename = filename_prefix + file_timestamp
-        urllib.urlretrieve(url, os.path.join(rootdir, filename))
+        urllib.request.urlretrieve(url, os.path.join(rootdir, filename))
         return filename
-    except:
+    except Exception as e:
+        print(e)
         return filename_prefix + file_timestamp + "_error"
 
 

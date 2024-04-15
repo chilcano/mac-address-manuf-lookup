@@ -3,7 +3,7 @@ FROM python:3.12-alpine
 
 LABEL author="Roger Carhuatocto"
 LABEL description="A MAC Address Manufacturer Lookup RESTful API"
-LABEL version="latest"
+LABEL version="1.4"
 
 # Fixes CVE for pip
 # https://scout.docker.com/v/CVE-2023-5752
