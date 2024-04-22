@@ -1,0 +1,56 @@
+info:
+  description: "\n\nA MAC Manufacturer Lookup RESTful API.\n\nThis service, download\
+    \ the Manufacturer file from Wireshark Website running `python mac_manuf_wireshark_file.py`\
+    \ manually or when building the `Dockerfile`.\n\nExample:\n\n   `curl -ik https://localhost:5443/chilcano/api/manuf/00:50:5a:e5:6e:cf`\n\
+    \n"
+  title: MAC Manufacturer Lookup RESTful API
+  version: '1.4'
+tags: []
+paths:
+  /chilcano/api/manuf/healthcheck:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      tags:
+      - Healthcheck
+      summary: Status
+  /chilcano/api/manuf/{macAddress}:
+    get:
+      parameters:
+      - in: path
+        name: macAddress
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Manufacturer
+      summary: Get Manuf
+      operationId: getManuf
+openapi: 3.0.3
+components:
+  schemas:
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+

@@ -23,3 +23,10 @@ target/
 _downloads/
 .venv
 __pycache__
+node_modules/
+package-lock.json
+package.json
+.spectral_owasp.yaml
+spectral-sarif/
+report_spectral_owasp.json
+report_spectral_owasp.sarif

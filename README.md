@@ -41,7 +41,7 @@ $ source .venv/bin/activate
 (.venv) $ pip freeze > requirements.txt 
 ```
 
-I've used the next Python modelues and libraries:
+I've used the next Python libraries:
 
 - `apiflask` (https://apiflask.com) - It is a wrapper of `Flask` (https://flask.palletsprojects.com) only to deal with API and generates OpenAPI documentation. It will install `Flask`, `Jinja2`, `Werkzeug` and other Flask's funcions such as `Jsonify` used to serialize the response object into JSON format.
 - `"apiflask[yaml]"` - Allow to generate the OpenAPI spec in YAML as well because it installs `PyYAML`.
@@ -124,7 +124,7 @@ The API served on HTTP is available on `5000` port and can be launched running t
 __1. Build the container__
 
 ```sh
-$ cd src/python/
+$ cd mac-address-manuf-lookup/
 $ docker build --rm -t chilcano/mac-manuf-lookup-py:test-01 .
 $ docker images
 ```
@@ -194,7 +194,7 @@ Connection: close
 
 Some time ago I wrote about how to implement [The Minimum Viable Security on Kubernetised Applications](https://holisticsecurity.io/2020/03/08/minimum-viable-security-for-a-k8s-webapp-tls-everywhere-part1/) considering the Pareto Principle and the Shift-Left Testing approach. In this case, we are going to do the same for Microservices and RESTful APIs. 
 
-### 1. Scanning vulnerable dependencies
+### 1. Scanning for vulnerable dependencies
 
 We will publish the entire source code repository _if and only if_ is:
 
@@ -203,6 +203,7 @@ We will publish the entire source code repository _if and only if_ is:
 3. Free of misconfigurations in the Infrastructure as code such as Terraform, Ansible, Cloudformation, Dockerfile, Helm Charts, etc.
 4. And if using Docker containers to package and ship your application, those Docker containers have not vulnerable OS libraries and misconfigurations. 
 
+To accomplish that, I will use Trivy.
 
 __Tools used__: 
   * Software Composition Analysis (SCA): [Trivy](https://trivy.dev)
@@ -224,19 +225,30 @@ Version: 0.49.0
 $ trivy fs --format table --vuln-type os,library --scanners vuln,secret,misconfig --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL .
 ```
 
+![](01_sca_trivy_repo.png)
+
 3. Scan for vulns, secrets and misconfigs in local container image and send results to stdout. We will use the locally built image `chilcano/mac-manuf-lookup-py:test-01` already created.
 
 ```sh
 $ trivy image --format table --vuln-type os,library --scanners vuln,secret --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL chilcano/mac-manuf-lookup-py:test-01 
 ```
 
-#### 1.2. Running Trivy CLI or Trivy Github Actions
+![](02_sca_trivy_docker.png)
+
+
+#### 1.2. Running Trivy CLI or Trivy Github Actions in automated way
 
 You have 2 options, implement a Github Workflow to run Trivy CLI or use the Trivy Github Action.
 
-- The Github Workflow created is [01-sca-app-deps-sec-trivy](01-sca-app-deps-sec-trivy.yaml). 
+- The Github Workflow created is [01-sca-app-deps-sec-trivy](.github/workflows/01-sca-app-deps-sec-trivy.yaml).
   * It is triggered by `PUSH` (commits) events and summary will be available in Github Actions Dashboard (https://github.com/chilcano/mac-address-manuf-lookup/actions/workflows/01-sca-app-deps-sec-trivy.yaml).
-  * The reports (Junit, HTML, Sarif) generated are available as Github Artifacts and the Sarif report is imported into Github Security Dashboard and available here: https://github.com/chilcano/mac-address-manuf-lookup/security
+  * The reports (Json, Junit, HTML, Sarif) generated are available as Github Artifacts and can be downloaded from Github Actions Dashboard.
+  * The Junit report has been generated to be imported into Github Action Summary view and as Annotations. In this case the Github Action used is [EnricoMi/publish-unit-test-result-action](https://github.com/EnricoMi/publish-unit-test-result-action).
+  * The Sarif report is imported into Github and the report is available from Github Security Dashboard: https://github.com/chilcano/mac-address-manuf-lookup/security
+  * The Json report has been transformed to SonarQube format. The SonarQube report has not been imported yet to SonarQube or SonarCloud instance.
+  * The [01-sca-app-deps-sec-trivy](.github/workflows/01-sca-app-deps-sec-trivy.yaml) will build a Docker container. It will be scanned for vulnerabilities, once completed, it will be uploaded to Github Container Register (https://ghcr.io/chilcano/mac-address-manuf-lookup) and will be available only the Repo Owner.
+
+![](03_sca_trivy_repo_github_action.png)
 
 
 ### 2. Secure Static Analysis of Application and APIs
@@ -250,9 +262,96 @@ Again, we will publish  the entire source code repository _if and only if_ is:
 __Tools used__: 
   * SAST for Applications: [SonarCloud](https://sonarcloud.io).
     - The Application Security Best Practices used are OWASP Top 10, CWE Top 25, tool's built-in rules, etc. 
-    - See the report here: https://sonarcloud.io/summary/overall?id=chilcano_docker-mac-address-manuf-lookup
+    - See the report here: https://sonarcloud.io/summary/overall?id=chilcano_mac-address-manuf-lookup
 
   * SAST for APIs: [Stoplight Spectral](https://stoplight.io/open-source/spectral).
-    - The API Security Best Practices used: [OWASP API Security Top 10 2023](https://owasp.org/www-project-api-security/) and [Spectral OWASP Ruleset](https://github.com/stoplightio/spectral-owasp-ruleset)
-    - The reports (Text, HTML, Sarif) generated are available as Github Artifacts and the Sarif report is imported into Github Security Dashboard and available here: https://github.com/chilcano/mac-address-manuf-lookup/security
+    - The API Security Best Practices used: [OWASP API Security Top 10 2023](https://owasp.org/www-project-api-security/) and [Spectral OWASP Ruleset](https://github.com/stoplightio/spectral-owasp-ruleset).
+    - The reports (Text, HTML, Sarif) generated are available as Github Artifacts and can be downloaded from Github Actions Dashboard.
+    - The Sarif report is imported into Github Security Dashboard and available here: https://github.com/chilcano/mac-address-manuf-lookup/security
+
+#### 2.1. Running Stoplight Spectral CLI locally
+
+1. Install Stoplight Spectral and Spectral-Sarif converter
+
+```sh
+$ node -v
+v20.11.0
+
+$ npm -v
+10.5.2
+
+$ npm install @stoplight/spectral-cli
+$ npm install @stoplight/spectral-owasp-ruleset
+
+$ echo 'extends: ["@stoplight/spectral-owasp-ruleset"]' > .spectral_owasp.yaml
+```
+
+2. Generate the OpenAPI spec file.
+
+```sh
+$ cd src/python/
+
+$ python3 -V
+Python 3.11.4
+
+$ pip -V
+pip 23.0.1 from /usr/lib/python3/dist-packages/pip (python 3.11)
+
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+$ pip -q install -r requirements.txt 
+
+$ flask --app mac_manuf_api_rest_https.py spec > openapi.yaml
+```
+
+3. Run Stoplight Spectral CLI.
+
+```sh
+$ cd ../../
+$ npx spectral lint src/python/openapi.yaml -r .spectral_owasp.yaml \
+  -f stylish -o.stylish "<stdout>" \
+  -f json -o.json report_spectral_owasp.json
+```
+
+![](04_sast_spectral_apisec.png)
+
+4. Convert Spectral Json report to Sarif
+
+```sh
+$ git clone --branch fix-level-attribute https://github.com/chilcano/spectral-sarif
+$ cd spectral-sarif
+$ npm install
+$ npm run build
+$ npx spectral-sarif --version
+0.0.18
+
+$ npx spectral-sarif ../report_spectral_owasp.json -o ../report_spectral_owasp.sarif -r ${PWD%/*}/
+```
+
+#### 2.2. Running Stoplight Spectral CLI in an automated way
+
+
+You have to implement a Github Workflow to run Spectral CLI.
+
+- The Github Workflow created is [02-sast-api-sec-spectral-owasp](.github/workflows/02-sast-api-sec-spectral-owasp.yaml).
+  * It is triggered by `PUSH` (commits) events and summary will be available in Github Actions Dashboard (https://github.com/chilcano/mac-address-manuf-lookup/actions/workflows/02-sast-api-sec-spectral-owasp.yaml).
+  * The reports (Json, HTML, Sarif) generated are available as Github Artifacts and can be downloaded from Github Actions Dashboard.
+  * The Json report has been transformed to Sarif format, it has been imported into Github to be available from Github Security Dashboard (https://github.com/chilcano/mac-address-manuf-lookup/security).
+
+![](05_sast_spectral_apisec_gha_artifact_html.png)
+![](05_sast_spectral_apisec_gha_github_security.png)
+![](05_sast_spectral_apisec_gha_github_security_code_view.png)
+
+
+## Handling found vulnerabilities in the Microservice and APIs
+
+First thing to do is download and review the reports generated by:
+1. Trivy (SCA: vulnerabilities in the dependencies, configuration, Dockerfile in the Repository and Docker image, leaked secrets, etc.)
+  * Remove vulnerable Python libraries or modules from [src/python/requirements.txt](src/python/requirements.txt).
+  * Use a secure Docker image, remove vulnerable OS packages and update the [./Dockerfile](./Dockerfile) accordingly.
+2. Stoplight Spectral (SAST for APIs: OWASP API Security Top 10)
+  * Update the Python API to fix OWASP issues in the [./openapi.yaml](./openapi.yaml) file. Once updated the Python code, the `openapi.yaml` file must be generated.
+  * You can follow the Stoplight API Stylebook for OWASP in order to fix the issues: https://apistylebook.stoplight.io/docs/owasp-top-10-2023
+3. SonarQube (SAST for Application: vulnerable code)
+  * Same recommendations detailed in point 2.
 
