@@ -1,4 +1,4 @@
-# Docker MAC Address Manufacturer Lookup
+# MAC Address Manufacturer Lookup
 
 
 This is a Microservice and its RESTful API that implements a MAC Address Manufacturer resolution service. They are part of the "Everything generates Data: Capturing WIFI Anonymous Traffic using Raspberry Pi and WSO2 BAM" blog serie, but you can use it independently as part of other scenario.
@@ -11,31 +11,19 @@ This is a Microservice and its RESTful API that implements a MAC Address Manufac
 
 MAC Address Manufacturer resolution service will work in this scenario as shown below:
 
-![The MAC Address Manufacturer Lookup Docker Container](https://github.com/chilcano/docker-mac-address-manuf-lookup/blob/master/chilcano_docker_microservice_mac_address_manuf_lookup_2.png "The MAC Address Manufacturer Lookup Docker Container")
+![The MAC Address Manufacturer Lookup Docker Container](https://github.com/chilcano/mac-address-manuf-lookup/blob/master/chilcano_docker_microservice_mac_address_manuf_lookup_2.png "The MAC Address Manufacturer Lookup Docker Container")
 
 
-In this version I've used Python and the next frameworks:
+## Running the Microservice locally
 
-
-- `Flask` (http://flask.pocoo.org) is a microframework for Python based on Werkzeug and Jinja 2. I will use `Flask` to implement a mini-web application.
-- `SQLAlchemy` (http://www.sqlalchemy.org/) is a Python SQL toolkit and ORM.
-- `SQLite3` (https://www.sqlite.org) is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
-- `pyOpenSSL` library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS).
-- `CORS extension for Flask` (https://flask-cors.readthedocs.org) useful to solve cross-domain Ajax request issues.
-
-
-## Getting started
-
-### Preparing the Microservice and its RESTful API
-
-__1. Download the Wireshark Manufacturer file__
+__1. Setup the Python environment__
 
 
 Clone this Github repository.
 
 ```sh
-$ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
-$ cd docker-mac-address-manuf-lookup/python/latest
+$ git clone https://github.com/chilcano/mac-address-manuf-lookup.git
+$ cd mac-address-manuf-lookup/src/python/
 ```
 
 Set the python virtual environment and update the Python packages.
@@ -45,42 +33,35 @@ $ python3 -V
 Python 3.11.4
 
 $ pip -V
-pip 23.0.1 from /home/chilcano/repos/me/docker-mac-address-manuf-lookup/python/1.4/.venv/lib/python3.11/site-packages/pip (python 3.11)
+pip 23.0.1 from /usr/lib/python3/dist-packages/pip (python 3.11)
 
 $ python3 -m venv .venv
 $ source .venv/bin/activate
-$ pip -q install -r requirements.txt
-
-(.venv) $ pip list --outdated
-Package      Version Latest Type
------------- ------- ------ -----
-click        7.1.2   8.1.7  wheel
-Flask        1.1.4   3.0.3  wheel
-Flask-Admin  1.5.8   1.6.1  wheel
-gunicorn     19.10.0 21.2.0 wheel
-itsdangerous 1.1.0   2.1.2  wheel
-Jinja2       2.11.3  3.1.3  wheel
-pip          23.0.1  24.0   wheel
-setuptools   66.1.1  69.5.1 wheel
-Werkzeug     1.0.1   3.0.2  wheel
-
-(.venv) $ pip -q install -U pip
-(.venv) $ pip -q uninstall click Flask Flask-Admin gunicorn itsdangerous Jinja2 setuptools Werkzeug MarkupSafe
-
-(.venv) $ pip -q install click Flask Flask-Admin gunicorn itsdangerous Jinja2 setuptools Werkzeug
-
+(.venv) $ pip -q install apiflask "apiflask[yaml]" flask-cors sqlalchemy pyopenssl unicodecsv
 (.venv) $ pip freeze > requirements.txt 
 ```
 
-If the main packages are the latest, then uninstall and install the outdated packages, only run this:
+I've used the next Python modelues and libraries:
+
+- `apiflask` (https://apiflask.com) - It is a wrapper of `Flask` (https://flask.palletsprojects.com) only to deal with API and generates OpenAPI documentation. It will install `Flask`, `Jinja2`, `Werkzeug` and other Flask's funcions such as `Jsonify` used to serialize the response object into JSON format.
+- `"apiflask[yaml]"` - Allow to generate the OpenAPI spec in YAML as well because it installs `PyYAML`.
+- `flask-cors` (https://flask-cors.readthedocs.org) - It solves cross-domain issues.
+- `sqlalchemy` (http://www.sqlalchemy.org/) is a Python SQL toolkit and ORM. It allows to work with `SQLite3` (https://www.sqlite.org) and doesn't require install extra modules.
+- `pyopenssl` (https://www.pyopenssl.org) is a library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS).
+- `unicodecsv` (https://github.com/jdunck/python-unicodecsv) - CVS module with unicode support. It is used to import Wireshark Manufacturer File into SQLite3 DB.
+
+If the packages in `requirements.txt` are updated and don't have any vulnerability, then you can install all of them running this:
 ```sh
 (.venv) $ pip -q install -r requirements.txt 
 ```
 
-Now, to download the Wireshark Manufacturer file.
+__2. Download the Wireshark Manufacturer file__
+
+To download the Wireshark Manufacturer file and import into a local SQLite3 DB, run this command:
 
 ```sh
 (.venv) $ python mac_manuf_wireshark_file.py
+
 New Manuf file downloaded: manuf/20240415.183121.853_20481313db0bbfbf9dd24648e2ed4ede_ok
 Cleaned Manuf file created: manuf/20240415.183121.853_20481313db0bbfbf9dd24648e2ed4ede_ok_cleaned
 TAB Manuf file created: manuf/20240415.183121.853_20481313db0bbfbf9dd24648e2ed4ede_ok_cleaned.tab
@@ -88,62 +69,10 @@ DB Manuf file created: manuf/20240415.183121.853_20481313db0bbfbf9dd24648e2ed4ed
 ( 'mac_address_manuf.db' was created and 50751 rows were loaded into 'MacAddressManuf' table. )
 ```
 
-__2. Running the Python Microservice__
+__3. Run the Python MAC Address Lookup microservice__
 
 
-_Running over HTTP_
-
-```sh
-(.venv) $ python mac_manuf_api_rest.py
-
- * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
- * Restarting with stat
- * Debugger is active!
- * Debugger pin code: 258-876-642
-
-127.0.0.1 - - [15/Apr/2024 19:17:05] "GET /chilcano/api/manuf/00-50:Ca-ca-fe-ca-fe HTTP/1.1" 400 -
-127.0.0.1 - - [15/Apr/2024 19:17:30] "GET /chilcano/api/manuf/00-50:Ca-ca-fe-ca HTTP/1.1" 200 -
-```
-
-And from other Terminal to call the RESTful API.
-
-```sh
-$ curl -i http://127.0.0.1:5000/chilcano/api/manuf/00-50:Ca-ca-fe-ca-fe
-
-HTTP/1.1 400 BAD REQUEST
-Server: Werkzeug/3.0.2 Python/3.11.4
-Date: Mon, 15 Apr 2024 17:17:05 GMT
-Content-Type: application/json
-Content-Length: 69
-Access-Control-Allow-Origin: *
-Connection: close
-
-{
-  "error": "The MAC Address '00-50:Ca-ca-fe-ca-fe' is malformed"
-}
-
-$ curl -i http://127.0.0.1:5000/chilcano/api/manuf/00-50:Ca-ca-fe-ca
-
-HTTP/1.1 200 OK
-Server: Werkzeug/3.0.2 Python/3.11.4
-Date: Mon, 15 Apr 2024 17:17:30 GMT
-Content-Type: application/json
-Content-Length: 70
-Access-Control-Allow-Origin: *
-Connection: close
-
-{
-  "mac": "00:50:CA",
-  "manuf": "DZS",
-  "manuf_desc": "DZS Inc."
-}
-
-```
-
-_Running over HTTPS_
-
-The `pyOpenSSL` moodule is required to start the embedded Webserver on HTTPS (TLS), to install it just run `pip install pyOpenSSL`.
-Then, the Python App will run over HTTPS:
+The `pyOpenSSL` module is used to generate the self-signed TLS certificate and start an embedded webserver on HTTPS (TLS) to serve the API:
 
 ```sh
 (.venv) ± python mac_manuf_api_rest_https.py 
@@ -160,13 +89,12 @@ Press CTRL+C to quit
  * Debugger PIN: 135-791-615
 
 127.0.0.1 - - [15/Apr/2024 19:21:33] "GET /chilcano/api/manuf/00-50:Ca-ca-fe-ca HTTP/1.1" 200 -
-
 ```
 
-And calling the API:
+__4. Call the Python MAC Address Lookup microservice__
 
 ```sh
-$ curl -ik https://127.0.0.1:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
+$ curl -ik https://localhost:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 
 HTTP/1.1 200 OK
 Server: Werkzeug/3.0.2 Python/3.11.4
@@ -183,54 +111,67 @@ Connection: close
 }
 ```
 
-### Running the Microservice and its RESTful API into a Docker Container
-
-__1. Clone the Github repository and build the container__
+The API served on HTTP is available on `5000` port and can be launched running this:
 
 ```sh
-$ git clone https://github.com/chilcano/docker-mac-address-manuf-lookup.git
-
-$ cd docker-mac-address-manuf-lookup
-
-$ docker build --rm -t chilcano/mac-manuf-lookup-py:1.4 python/1.4/.
-$ docker build --rm -t chilcano/mac-manuf-lookup-py:latest python/latest/.
+(.venv) $ python mac_manuf_api_rest.py
 ```
 
-__2. Pull from Docker Hub__
+
+## Running the Microservice from a Docker Container
+
+
+__1. Build the container__
 
 ```sh
-$ docker pull chilcano/mac-manuf-lookup-py
+$ docker build --rm -t chilcano/mac-manuf-lookup-py:test-01 .
+$ docker images
 ```
 
-__3. Run and check the container__
+__2. Run and check the container__
+
+The microservice will be exposed on `6443` port.
 
 ```sh
-$ docker run -dt --name=mac-manuf-py-14 -p 5000:5000/tcp -p 6443:5443/tcp chilcano/mac-manuf-lookup-py:1.4
-$ docker run -dt --name=mac-manuf-py-latest -p 5443:5443/tcp chilcano/mac-manuf-lookup-py:latest
-
+$ docker run -dt --name=mac-manuf-lookup-py-test-01 -p 6443:5443/tcp chilcano/mac-manuf-lookup-py:test-01
 $ docker ps
-
-CONTAINER ID   IMAGE                                 COMMAND                  CREATED          STATUS          PORTS                                                                                  NAMES
-090e66be2427   chilcano/mac-manuf-lookup-py:1.4      "python ./mac_manuf_…"   11 seconds ago   Up 10 seconds   0.0.0.0:5000->5000/tcp, :::5000->5000/tcp, 0.0.0.0:6443->5443/tcp, :::6443->5443/tcp   mac-manuf-py-14
-96b12ce87cdc   chilcano/mac-manuf-lookup-py:latest   "python ./mac_manuf_…"   9 minutes ago    Up 9 minutes    5000/tcp, 0.0.0.0:5443->5443/tcp, :::5443->5443/tcp                                    mac-manuf-py-latest
-
 ```
 
-__4. Gettting SSH access to the Container to check if SQLite DB exists__
+__3. Gettting SSH access to the Container and check the SQLite3 DB__
 
 ```sh
-$ docker exec -ti mac-manuf-py-14 bash
-$ docker exec -ti mac-manuf-py-latest bash
+$ docker exec -ti mac-manuf-lookup-py-test-01 sh
+
+/code $ ls -la
+total 40
+drwxr-xr-x    1 myuser   mygroup       4096 Apr 16 09:18 .
+drwxr-xr-x    1 root     root          4096 Apr 16 09:18 ..
+drwxr-xr-x    2 myuser   mygroup       4096 Apr 16 09:18 __pycache__
+-rw-rw-r--    1 root     root          1915 Apr 15 14:28 mac_manuf_api_rest.py
+-rw-rw-r--    1 root     root          2000 Apr 15 14:28 mac_manuf_api_rest_https.py
+-rw-rw-r--    1 root     root           717 Apr 15 14:28 mac_manuf_table_def.py
+-rw-rw-r--    1 root     root          5714 Apr 15 16:31 mac_manuf_wireshark_file.py
+drwxr-xr-x    2 myuser   mygroup       4096 Apr 16 09:05 manuf
+-rw-rw-r--    1 root     root           309 Apr 16 09:04 requirements.txt
+
+/code $ ls -la manuf/
+total 11320
+drwxr-xr-x    2 myuser   mygroup       4096 Apr 16 09:05 .
+drwxr-xr-x    1 myuser   mygroup       4096 Apr 16 09:18 ..
+-rw-r--r--    1 myuser   mygroup    2745094 Apr 16 09:05 20240416.090520.805_20481313db0bbfbf9dd24648e2ed4ede_ok
+-rw-r--r--    1 myuser   mygroup    2744635 Apr 16 09:05 20240416.090520.805_20481313db0bbfbf9dd24648e2ed4ede_ok_cleaned
+-rw-r--r--    1 myuser   mygroup    2304121 Apr 16 09:05 20240416.090520.805_20481313db0bbfbf9dd24648e2ed4ede_ok_cleaned.tab
+-rw-r--r--    1 myuser   mygroup    3780608 Apr 16 09:05 mac_address_manuf.db
 ```
 
 
-### Testing
+__4. Call the Microservice running in the Docker container__
 
-Since I'm only running the API on HTTPS enabled, then the available port will be `5443`. The port `5000` (HTTP) will be not available.
-Then, calling the Microservice through its RESTful API on HTTPS, you could call it as shown below.
+The API is exposed on HTTPS and available on `6443` port which is being forwarded from `5443`.
+Then, to call the microservice on HTTPS, you could call it as shown below.
 
 ```sh
-$ curl -ik https://localhost:5443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
+$ curl -ik https://localhost:6443/chilcano/api/manuf/00-50:Ca-ca-fe-ca
 
 HTTP/1.1 200 OK
 Server: Werkzeug/3.0.2 Python/3.12.3
@@ -246,3 +187,71 @@ Connection: close
   "manuf_desc": "DZS Inc."
 }
 ```
+
+## Securing the Microservice and APIs
+
+
+Some time ago I wrote about how to implement [The Minimum Viable Security on Kubernetised Applications](https://holisticsecurity.io/2020/03/08/minimum-viable-security-for-a-k8s-webapp-tls-everywhere-part1/) considering the Pareto Principle and the Shift-Left Testing approach. In this case, we are going to do the same for Microservices and RESTful APIs. 
+
+### 1. Scanning vulnerable dependencies
+
+We will publish the entire source code repository _if and only if_ is:
+
+1. Sanitized - Not leaked secrets, tokens, PII, etc.
+2. Free of vulnerabilities in application's dependencies such as internal and external libraries, component or modules used to build the application.
+3. Free of misconfigurations in the Infrastructure as code such as Terraform, Ansible, Cloudformation, Dockerfile, Helm Charts, etc.
+4. And if using Docker containers to package and ship your application, those Docker containers have not vulnerable OS libraries and misconfigurations. 
+
+
+__Tools used__: 
+  * Software Composition Analysis (SCA): [Trivy](https://trivy.dev)
+
+
+#### 1.1. Running Trivy CLI locally
+
+
+1. Install latest released binary of Trivy.
+```sh
+$ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ~/.local/bin -d
+$ trivy -v
+Version: 0.49.0
+```
+
+2. Scan for vulns, secrets and misconfigs in local folder repo and send results to stdout.
+
+```sh
+$ trivy fs --format table --vuln-type os,library --scanners vuln,secret,misconfig --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL .
+```
+
+3. Scan for vulns, secrets and misconfigs in local container image and send results to stdout. We will use the locally built image `chilcano/mac-manuf-lookup-py:test-01` already created.
+
+```sh
+$ trivy image --format table --vuln-type os,library --scanners vuln,secret --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL chilcano/mac-manuf-lookup-py:test-01 
+```
+
+#### 1.2. Running Trivy CLI or Trivy Github Actions
+
+You have 2 options, implement a Github Workflow to run Trivy CLI or use the Trivy Github Action.
+
+- The Github Workflow created is [01-sca-app-deps-sec-trivy](01-sca-app-deps-sec-trivy.yaml). 
+  * It is triggered by `PUSH` (commits) events and summary will be available in Github Actions Dashboard (https://github.com/chilcano/mac-address-manuf-lookup/actions/workflows/01-sca-app-deps-sec-trivy.yaml).
+  * The reports (Junit, HTML, Sarif) generated are available as Github Artifacts and the Sarif report is imported into Github Security Dashboard and available here: https://github.com/chilcano/mac-address-manuf-lookup/security
+
+
+### 2. Secure Static Analysis of Application and APIs
+
+
+Again, we will publish  the entire source code repository _if and only if_ is:
+
+1. Free of vulnerabilities in the source code. This means that the code must remove bad code practices, exploitable routines, mock code, sample code, etc.
+2. Free of vulnerabilities in the API. This means that we should obtain the _OpenAPI_ spec to assess the API security according Security Best Practices.
+
+__Tools used__: 
+  * SAST for Applications: [SonarCloud](https://sonarcloud.io).
+    - The Application Security Best Practices used are OWASP Top 10, CWE Top 25, tool's built-in rules, etc. 
+    - See the report here: https://sonarcloud.io/summary/overall?id=chilcano_docker-mac-address-manuf-lookup
+
+  * SAST for APIs: [Stoplight Spectral](https://stoplight.io/open-source/spectral).
+    - The API Security Best Practices used: [OWASP API Security Top 10 2023](https://owasp.org/www-project-api-security/) and [Spectral OWASP Ruleset](https://github.com/stoplightio/spectral-owasp-ruleset)
+    - The reports (Text, HTML, Sarif) generated are available as Github Artifacts and the Sarif report is imported into Github Security Dashboard and available here: https://github.com/chilcano/mac-address-manuf-lookup/security
+

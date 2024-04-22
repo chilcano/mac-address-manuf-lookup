@@ -6,5 +6,5 @@ README.md
 Changelog.md
 Makefile
 _downloads/
-manuf/
-*.db
+.venv
+__pycache__
