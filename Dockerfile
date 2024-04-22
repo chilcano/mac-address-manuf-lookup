@@ -24,16 +24,16 @@ RUN addgroup -S mygroup && adduser -S myuser -G mygroup -s /sbin/nologin
 RUN chown -R myuser:mygroup /code
 USER myuser
 
-COPY requirements.txt .
+COPY ./src/python/requirements.txt .
 RUN pip install -r requirements.txt
 
 # Allocate the 5443 to run a HTTP/HTTPS server
 EXPOSE 5443
 
-COPY mac_manuf_wireshark_file.py .
-COPY mac_manuf_table_def.py .
-COPY mac_manuf_api_rest.py .
-COPY mac_manuf_api_rest_https.py .
+COPY ./src/python/mac_manuf_wireshark_file.py .
+COPY ./src/python/mac_manuf_table_def.py .
+COPY ./src/python/mac_manuf_api_rest.py .
+COPY ./src/python/mac_manuf_api_rest_https.py .
 
 # Download Manuf file and create DB in build-time
 RUN python ./mac_manuf_wireshark_file.py

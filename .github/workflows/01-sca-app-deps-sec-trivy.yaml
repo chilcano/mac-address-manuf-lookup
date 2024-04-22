@@ -63,7 +63,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./src/python/Dockerfile
+          file: ./Dockerfile
           build-args: |
             COMMIT_SHA=${{ steps.myvars.outputs.GIT_HASH_SHORT }}
             ENVIRONMENT=${{ steps.myvars.outputs.CURRENT_ENVIRONMENT }}
@@ -138,7 +138,7 @@ jobs:
 
       - name: Transform Trivy report to SonarQube
         run: |
-          trivy sonarqube trivy-results-repo-${{ needs.build.outputs.GIT_HASH_SHORT }}.json --filePath=./src/python/Dockerfile > trivy-results-repo-${{ needs.build.outputs.GIT_HASH_SHORT }}.sonarqube.json
+          trivy sonarqube trivy-results-repo-${{ needs.build.outputs.GIT_HASH_SHORT }}.json --filePath=Dockerfile > trivy-results-repo-${{ needs.build.outputs.GIT_HASH_SHORT }}.sonarqube.json
 
       - name: Upload Repo scan results as Artifacts
         uses: actions/upload-artifact@v4
@@ -292,7 +292,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./src/python/Dockerfile
+          file: ./Dockerfile
           build-args: |
             COMMIT_SHA=${{ needs.build.outputs.GIT_HASH_SHORT }}
             ENVIRONMENT=${{ needs.build.outputs.CURRENT_ENVIRONMENT }}

@@ -124,6 +124,7 @@ The API served on HTTP is available on `5000` port and can be launched running t
 __1. Build the container__
 
 ```sh
+$ cd src/python/
 $ docker build --rm -t chilcano/mac-manuf-lookup-py:test-01 .
 $ docker images
 ```
