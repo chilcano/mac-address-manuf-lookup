@@ -66,6 +66,14 @@ $ pip -q install Werkzeug==3.0.3 Jinja2==3.1.4 Flask-Cors==4.0.1
 $ pip freeze > requirements.txt 
 ```
 
+We should do the same with Snyk and scan for vulnerabilities in the source code. If Snyk is installed and configured in VSCode, then it will detect some vulnerabilities in the code and dependencies:
+```sh
+$ pip uninstall cryptography
+$ pip install cryptography==42.0.6
+$ pip freeze > requirements.txt 
+```
+
+
 Next command is optional, only execute it if you want to install all packages and transitive dependencies automatically.
 ```sh
 (.venv) $ pip -q install -r requirements.txt 
