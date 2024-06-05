@@ -5,12 +5,12 @@ cffi==1.16.0
 click==8.1.7
 cryptography==42.0.5
 Flask==3.0.3
-Flask-Cors==4.0.0
+Flask-Cors==4.0.1
 Flask-HTTPAuth==4.8.0
 flask-marshmallow==1.2.1
 greenlet==3.0.3
 itsdangerous==2.2.0
-Jinja2==3.1.3
+Jinja2==3.1.4
 MarkupSafe==2.1.5
 marshmallow==3.21.1
 packaging==24.0
@@ -21,4 +21,4 @@ SQLAlchemy==2.0.29
 typing_extensions==4.11.0
 unicodecsv==0.14.1
 webargs==8.4.0
-Werkzeug==3.0.2
+Werkzeug==3.0.3

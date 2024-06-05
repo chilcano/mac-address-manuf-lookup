@@ -94,4 +94,4 @@ def get_manuf(macAddress):
 
 if __name__ == "__main__":
     # The 'adhoc' value means auto-generate the keypair and certificate
-    app.run(host="0.0.0.0", port=5443, ssl_context="adhoc", threaded=True, debug=True)
+    app.run(host="0.0.0.0", port=5443, ssl_context="adhoc", threaded=True, debug=False)

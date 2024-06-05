@@ -31,14 +31,15 @@ def download_file(rootdir, filename_prefix, url):
 
 
 def generate_file_md5(rootdir, filename, blocksize=2**20):
-    m = hashlib.md5()
+    # _checksum = hashlib.md5()     ## snyk reported vuln
+    _checksum = hashlib.sha256()
     with open(os.path.join(rootdir, filename), "rb") as f:
         while True:
             buf = f.read(blocksize)
             if not buf:
                 break
-            m.update(buf)
-    return m.hexdigest()
+            _checksum.update(buf)
+    return _checksum.hexdigest()
 
 
 def clean_manuf_file(rootdir, filename):
@@ -75,6 +76,7 @@ def create_manuf_file_tab(rootdir, filename):
                 col3 = " "
             file2.write(col1 + "\t" + col2 + "\t" + col3 + "\n")
     file2.close()
+    file1.close()
     return file2.name[len(ROOT_DIR)+1:]
 
 
@@ -89,6 +91,7 @@ def load_manuf_tab_file_into_db(rootdir, tabfilename, dbfilename, tablename):
     try:
         cur.executemany("INSERT INTO " + tablename + " (mac, manuf, manuf_desc) VALUES (?, ?, ?);", data)
         con.commit()
+        con.close()
         return cur.rowcount
     except:
         return False

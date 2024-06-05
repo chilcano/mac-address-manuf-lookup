@@ -43,14 +43,30 @@ $ source .venv/bin/activate
 
 I've used the next Python libraries:
 
-- `apiflask` (https://apiflask.com) - It is a wrapper of `Flask` (https://flask.palletsprojects.com) only to deal with API and generates OpenAPI documentation. It will install `Flask`, `Jinja2`, `Werkzeug` and other Flask's funcions such as `Jsonify` used to serialize the response object into JSON format.
+- `apiflask` (https://apiflask.com) - It is a wrapper of `Flask` (https://flask.palletsprojects.com) only to deal with API and generates OpenAPI documentation. It will install `Flask`, `Jinja2`, `Werkzeug` and other Flask's funcions such as `Jsonify`, used to serialize the response object into JSON format.
 - `"apiflask[yaml]"` - Allow to generate the OpenAPI spec in YAML as well because it installs `PyYAML`.
 - `flask-cors` (https://flask-cors.readthedocs.org) - It solves cross-domain issues.
 - `sqlalchemy` (http://www.sqlalchemy.org/) is a Python SQL toolkit and ORM. It allows to work with `SQLite3` (https://www.sqlite.org) and doesn't require install extra modules.
 - `pyopenssl` (https://www.pyopenssl.org) is a library to work with X.509 certificates. Required to start the embedded Webserver on HTTPS (TLS).
 - `unicodecsv` (https://github.com/jdunck/python-unicodecsv) - CVS module with unicode support. It is used to import Wireshark Manufacturer File into SQLite3 DB.
 
-If the packages in `requirements.txt` are updated and don't have any vulnerability, then you can install all of them running this:
+The [01-sca-app-deps-dec-trivy Github Action](https://github.com/chilcano/mac-address-manuf-lookup/actions/workflows/01-sca-app-deps-sec-trivy.yaml) or running Trivy from terminal, both will detect vulnerabilities in our dependencies.
+Fix them and update the `requirements.txt` file. For example, follow these commands:
+```sh
+# run trivy
+$ trivy fs --format table --vuln-type os,library --scanners vuln,secret,misconfig --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL . 
+
+# trivy will detect 3 vulnerable dependencies, so remove them
+$ pip -q uninstall Werkzeug Jinja2 Flask-Cors
+
+# reinstall recommended fixed dependencies
+$ pip -q install Werkzeug==3.0.3 Jinja2==3.1.4 Flask-Cors==4.0.1
+
+# update requeriments.txt file
+$ pip freeze > requirements.txt 
+```
+
+Next command is optional, only execute it if you want to install all packages and transitive dependencies automatically.
 ```sh
 (.venv) $ pip -q install -r requirements.txt 
 ```
