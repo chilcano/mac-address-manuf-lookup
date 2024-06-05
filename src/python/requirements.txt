@@ -3,7 +3,7 @@ apispec==6.6.0
 blinker==1.7.0
 cffi==1.16.0
 click==8.1.7
-cryptography==42.0.5
+cryptography==42.0.6
 Flask==3.0.3
 Flask-Cors==4.0.1
 Flask-HTTPAuth==4.8.0
