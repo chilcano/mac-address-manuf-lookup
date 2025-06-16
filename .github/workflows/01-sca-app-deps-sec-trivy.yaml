@@ -102,7 +102,7 @@ jobs:
           template: '@/contrib/html.tpl'
           output: trivy-results-repo-${{ needs.build.outputs.GIT_HASH_SHORT }}.html
         env:
-          TRIVY_USERNAME: ${{ github.repository_owner }}
+          TRIVY_USERNAME: ${{ github.repository_owner }}  ## only needed if remote repo need authn, with 'trivy fs' is not needed (?)
           TRIVY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Vuln scan in Repo (junit)
@@ -110,7 +110,7 @@ jobs:
         with:
           scan-type: fs
           scanners: vuln,secret,misconfig
-          image-ref: ghcr.io/${{ github.repository }}:${{ needs.build.outputs.CONTAINER_TAG }} 
+          scan-ref: .
           format: template
           template: '@/contrib/junit.tpl'
           output: trivy-results-repo-${{ needs.build.outputs.GIT_HASH_SHORT }}.junit
@@ -120,7 +120,7 @@ jobs:
         with:
           scan-type: fs
           scanners: vuln,secret,misconfig
-          image-ref: ghcr.io/${{ github.repository }}:${{ needs.build.outputs.CONTAINER_TAG }} 
+          scan-ref: .
           format: json
           output: trivy-results-repo-${{ needs.build.outputs.GIT_HASH_SHORT }}.json
 
@@ -194,7 +194,7 @@ jobs:
           input: _tmp/_tar/
           format: table
         env:
-          TRIVY_USERNAME: ${{ github.repository_owner }}
+          TRIVY_USERNAME: ${{ github.repository_owner }} ## only needed if remote docker is private, here it is not needed because tarball has been downloaded
           TRIVY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Vuln scan in Docker (html)
